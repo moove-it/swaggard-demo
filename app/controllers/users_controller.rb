@@ -1,17 +1,29 @@
+# @tag Users
 class UsersController < ApplicationController
 
   before_action :set_user, only: [:show, :update, :destroy]
 
+  # Get users
+  #
+  # @response_class Array<UserSerializer>
   def index
     @users = User.all
 
     render json: @users
   end
 
+  # Get user
+  #
+  # @response_class UserSerializer
   def show
     render json: @user
   end
 
+  # Create user
+  #
+  # @body_parameter [string] name
+  #
+  # @response_class UserSerializer
   def create
     @user = User.new(user_params)
 
@@ -22,6 +34,11 @@ class UsersController < ApplicationController
     end
   end
 
+  # Update user
+  #
+  # @body_parameter [string] name
+  #
+  # @response_class UserSerializer
   def update
     @user = User.find(params[:id])
 
@@ -32,6 +49,7 @@ class UsersController < ApplicationController
     end
   end
 
+  # Delete user
   def destroy
     @user.destroy
 
@@ -47,7 +65,7 @@ class UsersController < ApplicationController
   end
 
   def user_params
-    params[:user]
+    params.permit(:name)
   end
 
 end

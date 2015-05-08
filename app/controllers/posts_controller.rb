@@ -1,28 +1,47 @@
+# @tag User posts
 class PostsController < ApplicationController
 
   before_action :set_user
   before_action :set_post, only: [:show, :update, :destroy]
 
+  # Get user posts
+  #
+  # @response_class Array<PostSerializer>
   def index
     @posts = Post.all
 
     render json: @posts
   end
 
+  # Get user post
+  #
+  # @response_class PostSerializer
   def show
     render json: @post
   end
 
+  # Create user post
+  #
+  # @body_parameter [string] title
+  # @body_parameter [string] body
+  #
+  # @response_class PostSerializer
   def create
     @post = Post.new(post_params)
 
     if @post.save
-      render json: @post, status: :created, location: @post
+      render json: @post, status: :created
     else
       render json: @post.errors, status: :unprocessable_entity
     end
   end
 
+  # Update user post
+  #
+  # @body_parameter [string] title
+  # @body_parameter [string] body
+  #
+  # @response_class PostSerializer
   def update
     @post = Post.find(params[:id])
 
@@ -33,6 +52,7 @@ class PostsController < ApplicationController
     end
   end
 
+  # Delete user post
   def destroy
     @post.destroy
 
@@ -54,7 +74,7 @@ class PostsController < ApplicationController
   end
 
   def post_params
-    params[:post].merge(user: @user)
+    params.permit(:title, :body).merge(user: @user)
   end
 
 end
